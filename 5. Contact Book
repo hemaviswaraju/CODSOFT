@@ -1,0 +1,85 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+
+class ContactManagementApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Contact Management Application")
+        
+        self.contacts = {}
+
+        # Instructions label
+        self.instructions_label = tk.Label(root, text="Contact Management Application", font=("Helvetica", 14))
+        self.instructions_label.pack(pady=10)
+
+        # Button to add contact
+        self.add_contact_button = tk.Button(root, text="Add Contact", command=self.add_contact)
+        self.add_contact_button.pack(pady=5)
+
+        # Button to view contacts
+        self.view_contacts_button = tk.Button(root, text="View Contacts", command=self.view_contacts)
+        self.view_contacts_button.pack(pady=5)
+
+        # Button to search contact
+        self.search_contact_button = tk.Button(root, text="Search Contact", command=self.search_contact)
+        self.search_contact_button.pack(pady=5)
+
+        # Button to update contact
+        self.update_contact_button = tk.Button(root, text="Update Contact", command=self.update_contact)
+        self.update_contact_button.pack(pady=5)
+
+        # Button to delete contact
+        self.delete_contact_button = tk.Button(root, text="Delete Contact", command=self.delete_contact)
+        self.delete_contact_button.pack(pady=5)
+
+    def add_contact(self):
+        name = simpledialog.askstring("Input", "Enter contact name:")
+        if name:
+            phone = simpledialog.askstring("Input", "Enter phone number:")
+            email = simpledialog.askstring("Input", "Enter email address:")
+            address = simpledialog.askstring("Input", "Enter address:")
+            self.contacts[name] = {'phone': phone, 'email': email, 'address': address}
+            messagebox.showinfo("Success", f"Contact '{name}' added successfully!")
+        else:
+            messagebox.showwarning("Input Error", "Contact name cannot be empty.")
+
+    def view_contacts(self):
+        if not self.contacts:
+            messagebox.showinfo("Contact List", "No contacts available.")
+            return
+        
+        contact_list = "\n".join([f"{name}: {info['phone']}" for name, info in self.contacts.items()])
+        messagebox.showinfo("Contact List", contact_list)
+
+    def search_contact(self):
+        name = simpledialog.askstring("Search", "Enter contact name to search:")
+        if name in self.contacts:
+            info = self.contacts[name]
+            messagebox.showinfo("Contact Found", f"Name: {name}\nPhone: {info['phone']}\nEmail: {info['email']}\nAddress: {info['address']}")
+        else:
+            messagebox.showwarning("Not Found", "Contact not found.")
+
+    def update_contact(self):
+        name = simpledialog.askstring("Update", "Enter contact name to update:")
+        if name in self.contacts:
+            phone = simpledialog.askstring("Input", "Enter new phone number:")
+            email = simpledialog.askstring("Input", "Enter new email address:")
+            address = simpledialog.askstring("Input", "Enter new address:")
+            self.contacts[name] = {'phone': phone, 'email': email, 'address': address}
+            messagebox.showinfo("Success", f"Contact '{name}' updated successfully!")
+        else:
+            messagebox.showwarning("Not Found", "Contact not found.")
+
+    def delete_contact(self):
+        name = simpledialog.askstring("Delete", "Enter contact name to delete:")
+        if name in self.contacts:
+            del self.contacts[name]
+            messagebox.showinfo("Success", f"Contact '{name}' deleted successfully!")
+        else:
+            messagebox.showwarning("Not Found", "Contact not found.")
+
+# Main execution
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ContactManagementApp(root)
+    root.mainloop()
